@@ -44,6 +44,16 @@ public static class InstallerChecks
         bool rejected = false; try { InstallEngine.AssertWorkerResultPath(Path.Combine(root, "result.json")); } catch (ArgumentException) { rejected = true; }
         Check(rejected, "Unowned result path accepted.");
         Check(InstallEngine.Licenses().Contains("NeoMakesGames") && InstallEngine.Licenses().Contains("falorfrozen-cmd"), "Embedded license attribution missing.");
+        Check(!SteamDiscovery.CompleteModLabInstalled(nested), "Uninstalled ModLab Complete detected.");
+        Directory.CreateDirectory(Path.Combine(nested, "ModLabBackups"));
+        var completeRecord = Path.Combine(nested, @"ModLabBackups\ModLab.install.json");
+        File.WriteAllText(completeRecord, "{\"Profile\":\"ModLab\"}");
+        Check(SteamDiscovery.CompleteModLabInstalled(nested), "Combined installation not detected.");
+        var installGuard = InstallEngine.Apply("Install", nested);
+        Check(!installGuard.Success && installGuard.Message.Contains("ModLab Complete"), "Standalone installer did not direct combined installation to the correct Setup.");
+        var restoreGuard = InstallEngine.Apply("Restore", nested);
+        Check(!restoreGuard.Success && restoreGuard.Message.Contains("ModLab Complete"), "Standalone removal bypassed combined ownership.");
+        Check(File.ReadAllText(completeRecord) == "{\"Profile\":\"ModLab\"}", "Standalone guard changed combined ownership.");
         Console.WriteLine("PASS " + passed + " installer detection/argument checks."); return 0;
     }
 }

@@ -32,6 +32,11 @@ function Assert-LoaderHash([string]$Path,[string]$Hash) {
 }
 $loaderState = $null
 Assert-LoaderPath $loaderStatePath $loaderBackupRoot
+$loaderCompleteStatePath = Join-Path $loaderBackupRoot 'ModLab.install.json'
+Assert-LoaderPath $loaderCompleteStatePath $loaderBackupRoot
+if (Test-Path -LiteralPath $loaderCompleteStatePath) {
+    throw 'This game is managed by ModLab Complete. Use the combined ModLab-Setup installer to update or remove ModLab and its loader together. Do not manually remove the loader or its backups.'
+}
 if (Test-Path -LiteralPath $loaderStatePath) {
     if ((Get-Item -LiteralPath $loaderStatePath -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Loader installation state is a symbolic link.' }
     $loaderState = Get-Content -LiteralPath $loaderStatePath -Raw | ConvertFrom-Json

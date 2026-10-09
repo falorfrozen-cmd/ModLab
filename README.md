@@ -2,7 +2,7 @@
 
 An independent, lightweight Blueprint mod loader for **Minecraft Dungeons II**.
 
-**0.1.0-alpha.1 is an experimental release for Steam build 25754144 / game
+**0.1.0-alpha.2 is an experimental release for Steam build 25754144 / game
 1.1.2.0 / Unreal Engine 5.6.1.** Other builds, Xbox/Game Pass and multiplayer
 have not been validated.
 
@@ -18,10 +18,14 @@ See [complete ModLab installation instructions](docs/MODLAB-COMPLETE.md).
 The instructions below are for the **standalone loader**, intended for other
 Blueprint mods and mod developers.
 
+If Setup detects an existing ModLab Complete installation, standalone install
+and removal are disabled. Use `ModLab-Setup` for that installation. No manual
+loader deletion or recreated loader ownership record is needed.
+
 Get the files from [GitHub Releases](https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases).
 
 1. Close Minecraft Dungeons II.
-2. Run `ModLabLoader-Setup-0.1.0-alpha.1.exe`.
+2. Run `ModLabLoader-Setup-0.1.0-alpha.2.exe`.
 3. Select your game folder. Setup detects Steam libraries on other drives;
    **Browse** also lets you select the folder containing `Dungeons`.
 4. Click **Install / Update**. Windows may request administrator permission to
@@ -50,7 +54,7 @@ package files: players do not install NeoRune, Python or a .NET SDK.
 
 ## Manual installation
 
-Extract the `ModLabLoader` folder from `ModLabLoader-Manual-0.1.0-alpha.1.zip`
+Extract the `ModLabLoader` folder from `ModLabLoader-Manual-0.1.0-alpha.2.zip`
 into `Dungeons/Content/Paks/~mods/`:
 
 ```text

@@ -21,10 +21,16 @@ The core transaction fixtures passed:
   restoration of an original package that had already moved.
 - Discovery and restoration of a known loader placed in a custom mod folder.
 
-Fifteen C# checks passed for secondary Steam libraries, modern and legacy VDF,
+Twenty C# checks passed for secondary Steam libraries, modern and legacy VDF,
 custom install names, duplicate library roots, app identity, path traversal,
 Windows argument escaping, invalid worker result paths and embedded licenses. Fixtures use source
 metadata and empty game placeholders; they do not claim game-version validation.
+
+Alpha.2 adds combined ModLab ownership detection, direct install/removal
+guards and preservation of the combined record. The compiled EXE checks also
+exercise install and removal against a combined installation record and verify
+that the message names the correct ModLab-Setup installer. Clean-runner CI
+executes these cases without an active game. The runtime bytes are unchanged.
 
 The installer UI was rendered and checked for readable controls and navigation.
 The actual worker was tested without UAC in a writable fixture. The Windows UAC

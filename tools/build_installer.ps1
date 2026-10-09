@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory=$true)][string]$PackageDirectory,
-    [string]$Version = '0.1.0-alpha.1'
+    [string]$Version = '0.1.0-alpha.2'
 )
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^\d+\.\d+\.\d+(?:-[a-z0-9.]+)?$') { throw 'Invalid release version.' }

@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory=$true)][string]$PackageDirectory,
-    [string]$Version = '0.1.0-alpha.1'
+    [string]$Version = '0.1.0-alpha.2'
 )
 $ErrorActionPreference = 'Stop'
 $loaderBundleRepo = Split-Path $PSScriptRoot -Parent

@@ -23,6 +23,7 @@ function Invoke-SetupExeCheck([string]$Operation,[bool]$ExpectedSuccess) {
     $loaderExeWorker = Start-Process -FilePath $SetupPath -ArgumentList @('--worker',$Operation,('"'+$loaderExeGame+'"'),('"'+$loaderExeResultPath+'"')) -WindowStyle Hidden -PassThru -Wait
     if (-not (Test-Path -LiteralPath $loaderExeResultPath)) { throw 'Setup worker returned no result.' }
     $loaderExeResult = Get-Content -LiteralPath $loaderExeResultPath -Raw | ConvertFrom-Json
+    $script:loaderExeLastResult = $loaderExeResult
     if ($loaderExeResult.Success -ne $ExpectedSuccess -or (($loaderExeWorker.ExitCode -eq 0) -ne $ExpectedSuccess)) { throw ('Unexpected Setup result: ' + $loaderExeResult.Details) }
     Write-Output ($Operation + ': ' + $loaderExeResult.Message)
 }
@@ -42,4 +43,11 @@ Invoke-SetupExeCheck Install $true
 Invoke-SetupExeCheck Restore $true
 if (Test-Path -LiteralPath (Join-Path $loaderExeMods 'ModLabLoader\ModLabLoader_P.pak')) { throw 'Clean-install removal left our loader enabled.' }
 foreach ($loaderExeOriginal in $loaderExeOriginals) { if (Test-Path -LiteralPath $loaderExeOriginal.Path) { throw 'Clean-install removal restored a loader that had not been installed.' } }
-Write-Output ('PASS compiled Setup embedded package install/update/restore, unsupported-build rejection and clean installation without a previous loader. Evidence: ' + $loaderExeTestRoot)
+$loaderExeCompleteRecord = Join-Path $loaderExeGame 'ModLabBackups\ModLab.install.json'
+[IO.File]::WriteAllText($loaderExeCompleteRecord,'{"Profile":"ModLab"}')
+$loaderExeCompleteHash = (Get-FileHash -LiteralPath $loaderExeCompleteRecord).Hash
+Invoke-SetupExeCheck Install $false
+if ($script:loaderExeLastResult.Message -notlike '*ModLab Complete*') { throw 'Combined installation guard did not explain which installer to use.' }
+Invoke-SetupExeCheck Restore $false
+if ($script:loaderExeLastResult.Message -notlike '*ModLab Complete*' -or (Get-FileHash -LiteralPath $loaderExeCompleteRecord).Hash -ne $loaderExeCompleteHash) { throw 'Standalone restore bypassed combined installation ownership.' }
+Write-Output ('PASS compiled Setup embedded package install/update/restore, unsupported-build rejection, clean installation and combined-installation protection. Evidence: ' + $loaderExeTestRoot)

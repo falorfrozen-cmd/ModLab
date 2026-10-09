@@ -116,6 +116,11 @@ namespace ModLabLoader.Setup
             var text = File.ReadAllText(path);
             return Value(text, "appid") == "1912410" ? Value(text, "buildid") : null;
         }
+
+        public static bool CompleteModLabInstalled(string game)
+        {
+            return File.Exists(Path.Combine(game, @"ModLabBackups\ModLab.install.json"));
+        }
     }
 
     public static class InstallEngine
@@ -163,6 +168,8 @@ namespace ModLabLoader.Setup
                 if (!Path.IsPathRooted(game)) throw new ArgumentException("Select an absolute game folder.");
                 game = Path.GetFullPath(game).TrimEnd(Path.DirectorySeparatorChar);
                 if (!SteamDiscovery.HasGameFiles(game)) throw new ArgumentException("Select the folder containing Dungeons. The selected folder has no game files.");
+                if (SteamDiscovery.CompleteModLabInstalled(game))
+                    throw new InvalidOperationException("ModLab Complete is already installed. Use the combined ModLab-Setup installer for updates or removal. Do not manually remove the loader or its backups.");
                 if (operation == "Install" && SteamDiscovery.Build(game) != "25754144")
                     throw new ArgumentException("This experimental release supports Steam build 25754144 only. The selected build is not supported.");
                 Directory.CreateDirectory(scratch);
@@ -271,14 +278,14 @@ namespace ModLabLoader.Setup
             Text = "ModLab Loader Setup | " + BuildIdentity.Version;
             Font = new Font("Segoe UI", 10F); ForeColor = ink; BackColor = Color.FromArgb(15, 24, 35);
             AutoScaleDimensions = new SizeF(96, 96); AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(800, 650); MinimumSize = new Size(720, 650);
+            ClientSize = new Size(800, 750); MinimumSize = new Size(720, 750);
             StartPosition = FormStartPosition.CenterScreen;
             var page = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(28), ColumnCount = 1, RowCount = 10 };
             Controls.Add(page);
-            float[] heights = { 62, 48, 36, 44, 44, 84, 54, 14, 0, 50 };
+            float[] heights = { 62, 64, 36, 44, 44, 112, 54, 14, 0, 50 };
             for (int i = 0; i < heights.Length; i++)
                 page.RowStyles.Add(new RowStyle(i == 8 ? SizeType.Percent : SizeType.Absolute, i == 8 ? 100 : heights[i]));
-            page.Controls.Add(Label("ModLab Loader", 25F, ink), 0, 0);
+            page.Controls.Add(Label("ModLab Loader (standalone)", 25F, ink), 0, 0);
             page.Controls.Add(Label("EXPERIMENTAL  " + BuildIdentity.Version + "\nLoad Blueprint mods. Keep your installation reversible.", 10F, muted), 0, 1);
             page.Controls.Add(Label("Minecraft Dungeons II game folder", 11F, ink), 0, 2);
             var paths = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, Margin = new Padding(0) };
@@ -294,7 +301,7 @@ namespace ModLabLoader.Setup
             paths.Controls.Add(location, 0, 0); paths.Controls.Add(browse, 1, 0); paths.Controls.Add(refresh, 2, 0);
             page.Controls.Add(paths, 0, 3);
             state.Dock = DockStyle.Fill; state.ForeColor = muted; state.Padding = new Padding(0, 8, 0, 0); page.Controls.Add(state, 0, 4);
-            page.Controls.Add(Label("Steam build 25754144 / game 1.1.2.0\nInstall / Update backs up known conflicting loaders outside Paks.\nRemove / Restore returns to the backed-up loader. Character saves stay untouched.", 10F, muted), 0, 5);
+            page.Controls.Add(Label("Steam build 25754144 / game 1.1.2.0\nInstall / Update backs up conflicting loaders outside Paks.\nRemove / Restore returns to the backed-up loader.\nCharacter saves stay untouched.", 10F, muted), 0, 5);
             var actions = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, Margin = new Padding(0) };
             actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             ConfigureButton(install, "Install / Update", true); ConfigureButton(restore, "Remove / Restore", false);
@@ -320,6 +327,9 @@ namespace ModLabLoader.Setup
                 }
             };
             footer.Controls.Add(close); footer.Controls.Add(licenses); page.Controls.Add(footer, 0, 9);
+            var complete = new LinkLabel { Text = "Get complete ModLab (gameplay + loader)", AutoSize = true, LinkColor = muted, Location = new Point(100, 12) };
+            complete.Click += (sender, args) => Process.Start(new ProcessStartInfo("https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases/tag/modlab-v0.1.0-alpha.1") { UseShellExecute = true });
+            footer.Controls.Add(complete);
             FormClosing += (sender, args) => { if (busy) { args.Cancel = true; outcome.Text = "Please wait for the installation transaction to finish."; } };
             FindGames();
         }
@@ -349,7 +359,7 @@ namespace ModLabLoader.Setup
         void RefreshState()
         {
             if (busy) return;
-            bool valid = false, owned = false;
+            bool valid = false, owned = false, complete = false;
             try
             {
                 var game = location.Text.Trim();
@@ -359,12 +369,14 @@ namespace ModLabLoader.Setup
                 {
                     var build = SteamDiscovery.Build(game); valid = build == "25754144";
                     owned = File.Exists(Path.Combine(game, @"ModLabBackups\ModLabLoader.install.json"));
-                    state.Text = (valid ? "Supported Steam build detected." : "Unsupported build: " + (build ?? "Steam manifest not found")) +
+                    complete = SteamDiscovery.CompleteModLabInstalled(game);
+                    state.Text = complete ? "ModLab Complete is installed. Use the combined ModLab-Setup installer." :
+                        (valid ? "Supported Steam build detected." : "Unsupported build: " + (build ?? "Steam manifest not found")) +
                         (owned ? "  ModLab Loader installation record found." : "");
                 }
             }
             catch (Exception error) { state.Text = "Cannot read this folder: " + error.Message; }
-            install.Enabled = valid; restore.Enabled = owned;
+            install.Enabled = valid && !complete; restore.Enabled = owned && !complete;
         }
 
         async Task Apply(string operation)

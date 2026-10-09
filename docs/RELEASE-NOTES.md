@@ -1,4 +1,24 @@
-# ModLab Loader 0.1.0-alpha.1
+# ModLab Loader 0.1.0-alpha.2
+
+Installer-only update; the native loader runtime is unchanged.
+
+**ModLab players should use the [complete ModLab installer](https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases/tag/modlab-v0.1.0-alpha.1), which includes both gameplay mods and the loader.**
+
+The standalone installer now detects the combined ModLab installation record,
+disables standalone install/removal and points to the correct Setup. It no
+longer mistakes combined ownership for an unrecorded manual loader installation.
+The script also refuses changes under combined ownership. No manual file
+deletion or duplicate ownership record is needed.
+
+The window labels itself as standalone, includes a complete-ModLab download
+link and has more space for status text. Existing standalone installation,
+update and restoration behavior remains available for other Blueprint mods.
+
+Downloads are `ModLabLoader-Setup-0.1.0-alpha.2.exe`,
+`ModLabLoader-Manual-0.1.0-alpha.2.zip` and
+`ModLabLoader-Nexus-0.1.0-alpha.2.zip`, plus `SHA256SUMS.txt`.
+
+## Previous release: 0.1.0-alpha.1
 
 First experimental release of an independent Blueprint mod loader for
 Minecraft Dungeons II. Validated target: **Steam build 25754144 / game 1.1.2.0**.
