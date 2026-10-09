@@ -11,19 +11,22 @@ Your settings and character progression remain saved between sessions.
 
 ## Download and install
 
-**[Download ModLab-Setup-0.1.0-alpha.2.exe](https://github.com/falorfrozen-cmd/ModLab/releases/download/modlab-v0.1.0-alpha.2/ModLab-Setup-0.1.0-alpha.2.exe)**
+**Recommended: [Complete Manual Package on Nexus](https://www.nexusmods.com/minecraftdungeons2/mods/147?tab=files)**
 
-[Release notes and checksums](https://github.com/falorfrozen-cmd/ModLab/releases/tag/modlab-v0.1.0-alpha.2)
+The alpha.2 manual package is the current approved download. Close the game,
+extract it and follow the included README to copy its two folders into the
+game's `Dungeons/Content/Paks/~mods` directory. It includes the integrated loader
+and the gameplay suite. Start through Steam and press **F10**.
 
-1. Close Minecraft Dungeons II.
-2. Run **ModLab-Setup-0.1.0-alpha.2.exe**.
-3. Select your game folder. Steam libraries on other drives are detected
-   automatically; **Browse** supports custom locations.
-4. Click **Install / Update**.
-5. Start the game through Steam and press **F10**.
+The installer candidates remain quarantined on Nexus. Alpha.4 replaces the
+custom wrapper with a standard Inno Setup wizard and a C# file engine. Its
+EXE scan improved from 8/71 detections to 1/71; its ZIP has a separate 1/68
+detection. Neither scan is an approval or safety guarantee. Do not disable
+security software to install it. See the [scan record](player-installer/SCAN-RESULTS.md).
 
-**One installer includes everything needed.** There is no second installation
-and no desktop ModLab application to run during gameplay.
+[Earlier release notes and checksums](https://github.com/falorfrozen-cmd/ModLab/releases/tag/modlab-v0.1.0-alpha.2)
+
+There is no desktop ModLab application to run during gameplay.
 
 Current alpha target: **Windows x64, Steam build 25754144 / game 1.1.2.0**.
 Primarily tested offline. See [compatibility and known issues](#compatibility-and-known-issues).
@@ -313,9 +316,10 @@ Setup is portable: keep it or redownload it for removal. It has no Windows
 Apps entry or background service. The EXE is unsigned; verify downloads
 against the release's **SHA256SUMS.txt**.
 
-Playing needs no NeoRune SDK, Python or .NET SDK. Installation uses Windows'
-built-in PowerShell 5.1 and .NET Framework 4.8. Developer self-test scenarios,
-probe mods, SDKs and player saves are excluded from the player package.
+Playing needs no NeoRune SDK, Python or .NET SDK. The alpha.4 installer candidate
+uses .NET Framework 4.8 and executes its file operations directly in C#.
+PowerShell is used only by developer build/test scripts. Developer self-test
+scenarios, probe mods, SDKs and player saves are excluded from the player package.
 
 ## Compatibility and known issues
 
@@ -340,10 +344,11 @@ include character saves or account details unless you intend to share them.
 
 ## Development
 
-This public repository contains the bootstrap and standalone installer source,
-plus ModLab player documentation and complete player releases. The broader
-gameplay source is maintained separately. Source provided here is MIT-licensed;
-that does not relicense the full gameplay package or its artwork.
+This public repository contains the bootstrap, standalone installer and
+[complete player installer source and build instructions](player-installer/README.md),
+plus ModLab player documentation. The broader gameplay source is maintained
+separately. Source provided here is MIT-licensed; that does not relicense the
+full gameplay package or its artwork.
 
 [Bootstrap reference](docs/BOOTSTRAP.md) · [Build tools](docs/BUILDING.md) ·
 [Runtime validation](docs/RUNTIME-VALIDATION.md) · [Third-party notices](THIRD-PARTY-NOTICES.md)
