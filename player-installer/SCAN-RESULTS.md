@@ -13,7 +13,9 @@ Alpha.5 was submitted as Nexus file **399**. Its EXE shows **2/71**:
 SecureAge `Malicious` and Zillya `Backdoor.Agent.Win32.101941`. The completed
 ZIP report shows **0/61**, with Zillya timing out and SecureAge unable to
 process the archive. This does not clear the EXE's two detections. Nexus file
-399 remains unavailable while processing at this update. Alpha.4 reports
+399 was unavailable while processing at the last verified browser check. Its
+current Nexus status could not be refreshed on 2026-10-10 because the browser
+connection was unavailable. Alpha.4 reports
 below do not apply to the changed EXE.
 
 Alpha.5 EXE SHA-256:
@@ -57,6 +59,40 @@ The next step is review of the remaining detections and Nexus quarantine,
 using the complete source and [build instructions](README.md). No antivirus
 exclusion, weakened security setting, obfuscation or scan-bypass measure is
 part of this installer.
+
+## Review request and additional checks
+
+The author sent a review request for file **399** to `support@nexusmods.com`
+on **2026-10-10**. Gmail confirmed the message's `SENT` status. The request
+includes the source revision, hashes, build/test instructions, CI evidence
+and both remaining detections. Sending the request is not Nexus approval.
+
+Further checks used the existing alpha.5 files; the uploaded EXE and ZIP
+hashes above remain unchanged:
+
+- Microsoft Defender platform `4.18.26080.4`, definitions `1.459.641.0`,
+  completed custom scans of the installer EXE and its prepared payload
+  directory and reported no threats. Real-time protection remained enabled.
+  This is a local Defender result, not clearance by SecureAge or Zillya.
+- An independent compilation of the public worker source and the original
+  build identity matched the released build worker's **95 method records**
+  (including 94 IL bodies),
+  assembly references, literal constants and P/Invoke declarations. Metadata
+  was read in separate reflection-only processes without running either
+  worker. This comparison is not a byte-for-byte reproducible-build claim or
+  a comprehensive security certification.
+- The worker is an IL-only x64 .NET assembly with no PE overlay. Its only
+  declared P/Invoke is `kernel32.dll` / `GetLongPathName`, used to resolve Temp
+  path aliases. All eight runtime inputs still match their manifest.
+- Windows reports the Microsoft C# compiler and Pyrsys Inno compiler
+  Authenticode signatures as valid. The ModLab Setup and worker themselves
+  remain unsigned.
+
+Current alpha.5 build worker SHA-256:
+`56E2CECBA9FC421733B151B0A0FC8577DB80960C848919BC16F578AE90F28DA1`.
+Its separate VirusTotal classification could not be verified; do not treat
+that as a zero-detection report. No exact detection rule or confirmed false
+positive decision is available for the two flagged EXE engines.
 
 Original reports: [alpha.2 EXE](https://www.virustotal.com/gui/file/6b566f2b8c4074b1107386f54728e7a935551e08ea50e58c7e22857d0b0f3cbb),
 [alpha.2 ZIP](https://www.virustotal.com/gui/file/f79587893c1915f3b8509d0991536e6571a9a43fb8a76ebaba21d04522016621),
