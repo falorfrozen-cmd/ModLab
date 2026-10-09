@@ -2,7 +2,7 @@
 
 Installer-only update; the native loader runtime is unchanged.
 
-**ModLab players should use the [complete ModLab installer](https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases/tag/modlab-v0.1.0-alpha.1), which includes both gameplay mods and the loader.**
+**ModLab players should use the [complete ModLab installer](https://github.com/falorfrozen-cmd/ModLab/releases/tag/modlab-v0.1.0-alpha.1), which includes both gameplay mods and the loader.**
 
 The standalone installer now detects the combined ModLab installation record,
 disables standalone install/removal and points to the correct Setup. It no

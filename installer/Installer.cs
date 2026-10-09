@@ -275,7 +275,7 @@ namespace ModLabLoader.Setup
 
         public InstallerWindow()
         {
-            Text = "ModLab Loader Setup | " + BuildIdentity.Version;
+            Text = "ModLab developer utility | " + BuildIdentity.Version;
             Font = new Font("Segoe UI", 10F); ForeColor = ink; BackColor = Color.FromArgb(15, 24, 35);
             AutoScaleDimensions = new SizeF(96, 96); AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(800, 750); MinimumSize = new Size(720, 750);
@@ -285,7 +285,7 @@ namespace ModLabLoader.Setup
             float[] heights = { 62, 64, 36, 44, 44, 112, 54, 14, 0, 50 };
             for (int i = 0; i < heights.Length; i++)
                 page.RowStyles.Add(new RowStyle(i == 8 ? SizeType.Percent : SizeType.Absolute, i == 8 ? 100 : heights[i]));
-            page.Controls.Add(Label("ModLab Loader (standalone)", 25F, ink), 0, 0);
+            page.Controls.Add(Label("ModLab — developer utility", 25F, ink), 0, 0);
             page.Controls.Add(Label("EXPERIMENTAL  " + BuildIdentity.Version + "\nLoad Blueprint mods. Keep your installation reversible.", 10F, muted), 0, 1);
             page.Controls.Add(Label("Minecraft Dungeons II game folder", 11F, ink), 0, 2);
             var paths = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, Margin = new Padding(0) };
@@ -328,7 +328,7 @@ namespace ModLabLoader.Setup
             };
             footer.Controls.Add(close); footer.Controls.Add(licenses); page.Controls.Add(footer, 0, 9);
             var complete = new LinkLabel { Text = "Get complete ModLab (gameplay + loader)", AutoSize = true, LinkColor = muted, Location = new Point(100, 12) };
-            complete.Click += (sender, args) => Process.Start(new ProcessStartInfo("https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases/tag/modlab-v0.1.0-alpha.1") { UseShellExecute = true });
+            complete.Click += (sender, args) => Process.Start(new ProcessStartInfo("https://github.com/falorfrozen-cmd/ModLab/releases/tag/modlab-v0.1.0-alpha.2") { UseShellExecute = true });
             footer.Controls.Add(complete);
             FormClosing += (sender, args) => { if (busy) { args.Cancel = true; outcome.Text = "Please wait for the installation transaction to finish."; } };
             FindGames();

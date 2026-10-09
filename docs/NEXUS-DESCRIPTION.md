@@ -1,56 +1,74 @@
-# ModLab Loader — Experimental
+# ModLab for Minecraft Dungeons II
 
-A lightweight, independent Blueprint mod loader for Minecraft Dungeons II.
-Approximately 40 KiB of runtime packages, one startup pass per world, and a
-reversible Windows installer.
+**ModLab is an all-in-one gameplay and quality-of-life mod suite for Minecraft Dungeons II.**
 
-## Compatibility
+## Installation
 
-This first experimental release is validated on **Steam build 25754144, game
-1.1.2.0, Unreal Engine 5.6.1**. Xbox/Game Pass, other builds and multiplayer have
-not been validated. Setup rejects unsupported Steam builds.
+1. Close Minecraft Dungeons II.
+2. Run `ModLab-Setup-0.1.0-alpha.2.exe`.
+3. Select the game folder containing `Dungeons`. Steam libraries on other
+   drives are detected automatically; Browse supports custom locations.
+4. Click **Install / Update**. Windows may request administrator permission
+   to write to the game folder.
+5. Start the game through Steam and press **F10** to open ModLab.
 
-## Files
+Everything needed is included in the single ModLab installer.
+The English F10 menu contains the actual embedded ModLab interface.
 
-- **Windows Setup:** run the EXE, select the game folder and click Install /
-  Update. Steam libraries on other drives are detected; manual browsing is
-  supported. Windows may request administrator permission. Run Setup again
-  and select Remove / Restore to undo installation.
-- **Manual package:** copy the ModLabLoader folder into
-  Dungeons/Content/Paks/~mods while the game is closed. Disable every other
-  loader by moving its package files outside Paks first.
-- **SHA256SUMS.txt:** hashes for the release downloads. Setup is unsigned.
+## Included features
 
-Setup backs up known conflicting Blueprint Loader / BetterBlueprintLoader
-packages outside mounted Paks and preserves character saves and other mods.
-Backups remain after removal. Setup is a portable tool, not a background
-service or a Windows Apps entry.
+- Berserker class with persistent Mastery, talents, loadouts, War Cry,
+  Rampage, Ascension, buff timers and character effects.
+- Smart Filter, Auto Sell and Wanted Items protection with rarity rules
+  and an optional Power threshold.
+- Enchant Workshop (F8), combat meter, run reports and expanded wallet.
+- Boss Rush, Boss Roulette and Dungeon/Rift Directors.
+- Endless Soul Storm, independent generator/completion chest reward rolls,
+  all-region Soul Storm loot, generator map markers and travel, optional
+  shield removal.
+- Experimental Headhunter Relic.
 
-## Mod support
+## Updating and removing
 
-Loads conventional /Game/Mods/<ModId>/ModActor.ModActor_C entry points.
-No per-frame loader tick, recurring scan, DLL injection or desktop process
-runs during gameplay. Players do not install NeoRune, Python or a .NET SDK.
-Windows Setup uses the PowerShell 5.1 and .NET Framework 4.8 supplied with
-current Windows 10/11.
+Run the same Setup EXE again. **Install / Update** changes the gameplay suite
+and loader together. **Remove / Restore** removes them together and restores
+the installation present before the first combined install.
 
-Use one loader at a time. Mods depending on another loader's shared settings,
-popup or other ecosystem APIs need that loader instead. This release does not
-implement those APIs, dependency ordering, automatic crash quarantine or native
-DLL mod loading. It makes no FPS or speed comparison claims.
+Existing ModLab files, a standalone ModLab Loader installation and known
+Blueprint Loader packages are backed up under `ModLabBackups`, outside Paks.
+Do not delete that folder while you need restoration. Other mods, character
+saves and persisted settings are not changed by Setup. A previously installed
+ModLab version will reappear on removal because it was part of the baseline.
 
-This is the loader only. ModLab gameplay features and its F10 interface are
-separate mods. Normal startup adds no permanent loader watermark.
+Setup is portable: it has no background service or Windows Apps entry. Keep
+the EXE or download it again for removal. Modified owned files or damaged
+restore records are rejected rather than overwritten.
 
-## Support and source
+## Supported version
 
-Source, validation notes and downloads:
-https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader
+Experimental alpha for Steam build **25754144**, game **1.1.2.0**, Windows x64.
+Primarily tested offline. Other game builds, launchers and multiplayer are
+unverified. Direct travel to the final Dungeon/Rift ambush is unavailable.
 
-Report the game build, platform, loader version, installed mods and steps to
-reproduce a problem. Optional startup logging: -ModLabLoaderDiagnostics.
-Skip a mod: -ModLabLoaderSkip=ExampleA,ExampleB (case-sensitive IDs).
+The EXE is unsigned. Published SHA256SUMS.txt lets you verify the download.
+Playing requires neither the NeoRune SDK, Python nor a .NET SDK. The installer
+uses Windows PowerShell 5.1 and .NET Framework 4.8 included in Windows 10/11.
 
-Independent implementation; no Blueprint Loader package or source is bundled.
-Our source is MIT-licensed; NeoRune's MIT helper notice is included in the files.
-Unofficial fan project, not affiliated with Mojang, Microsoft or Epic Games.
+## Contents
+
+Only these eight runtime files are installed:
+
+```text
+Dungeons/Content/Paks/~mods/ModLabLoader/ModLabLoader_P.pak
+Dungeons/Content/Paks/~mods/ModLabLoader/ModLabLoader_P.ucas
+Dungeons/Content/Paks/~mods/ModLabLoader/ModLabLoader_P.utoc
+Dungeons/Content/Paks/~mods/QoLSuite/QoLSuite_P.pak
+Dungeons/Content/Paks/~mods/QoLSuite/QoLSuite_P.ucas
+Dungeons/Content/Paks/~mods/QoLSuite/QoLSuite_P.utoc
+Dungeons/Content/Paks/~mods/QoLSuite/ModLab.html
+Dungeons/Content/Paks/~mods/QoLSuite/BerserkerBuffs.png
+```
+
+Developer self-test scenarios, probe mods, SDKs, game executables and player
+saves are not bundled. Licenses and third-party attribution are accessible
+from Setup's **Licenses** link and included with the distribution ZIP.

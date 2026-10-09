@@ -1,18 +1,18 @@
 # ModLab for Minecraft Dungeons II
 
-**One installation includes the full ModLab gameplay suite and ModLab Loader.**
+**ModLab is an all-in-one gameplay and quality-of-life mod suite for Minecraft Dungeons II.**
 
 ## Installation
 
 1. Close Minecraft Dungeons II.
-2. Run `ModLab-Setup-0.1.0-alpha.1.exe`.
+2. Run `ModLab-Setup-0.1.0-alpha.2.exe`.
 3. Select the game folder containing `Dungeons`. Steam libraries on other
    drives are detected automatically; Browse supports custom locations.
 4. Click **Install / Update**. Windows may request administrator permission
    to write to the game folder.
 5. Start the game through Steam and press **F10** to open ModLab.
 
-Do not install the standalone loader separately. This Setup includes it.
+Everything needed is included in the single ModLab installer.
 The English F10 menu contains the actual embedded ModLab interface.
 
 ## Included features
