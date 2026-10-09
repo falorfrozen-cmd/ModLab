@@ -4,6 +4,25 @@ Functional installation tests passed. Antivirus acceptance is a separate,
 unresolved release requirement. No vendor has provided its detection rule.
 These counts are observations at the time of review and can change.
 
+Alpha.5 fixes a real alpha.4 compatibility failure caught by clean Windows CI:
+the helper compared an 8.3 Temp alias against a long TEMP path. The corrected
+worker resolves both existing names before validating the Temp prefix. The
+actual compiled EXE and the [clean Windows workflow](https://github.com/falorfrozen-cmd/ModLab/actions/runs/37970294182)
+passed. This is a functional fix, independent of antivirus classification.
+Alpha.5 was submitted as Nexus file **399**. Its EXE shows **2/71**:
+SecureAge `Malicious` and Zillya `Backdoor.Agent.Win32.101941`. The completed
+ZIP report shows **0/61**, with Zillya timing out and SecureAge unable to
+process the archive. This does not clear the EXE's two detections. Nexus file
+399 remains unavailable while processing at this update. Alpha.4 reports
+below do not apply to the changed EXE.
+
+Alpha.5 EXE SHA-256:
+`95BBBE3C1435A94087B8D835BF33F891C7DE0A2F3A4B1E30DB4D8B916E920B69`.
+[EXE report](https://www.virustotal.com/gui/file/95bbbe3c1435a94087b8d835bf33f891c7de0a2f3a4b1e30db4d8b916e920b69).
+Alpha.5 ZIP SHA-256:
+`8411C2D94171167373CA15B1B5131BFFDD5911BD446B2C016EED31A7F527C7CC`.
+[ZIP report](https://www.virustotal.com/gui/file/8411c2d94171167373ca15b1b5131bffdd5911bd446b2c016eed31a7f527c7cc).
+
 | Candidate | Packaging / backend | EXE result | Distribution ZIP result |
 | --- | --- | --- | --- |
 | alpha.2 | Custom WinForms wrapper / PowerShell file transaction | 8/71 | 2/66 |

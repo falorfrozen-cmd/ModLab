@@ -1,6 +1,6 @@
 # Complete ModLab installer source
 
-This directory contains the full source of the **alpha.4 standard player
+This directory contains the full source of the **alpha.5 standard player
 installer**, including its C# transaction engine. Alpha.5 fixes the Temp path
 alias compatibility issue found by the clean Windows runner. One EXE installs the gameplay
 suite and integrated loader together.

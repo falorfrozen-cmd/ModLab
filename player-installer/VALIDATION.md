@@ -13,6 +13,16 @@ The actual alpha.5 EXE passed the complete temporary-fixture suite, including
 original alpha.2 installation migration. The compiled worker also passed actual
 discovery through an 8.3 alias with a process-local Temp override, occupied
 result rejection and changed manifest rejection. Runtime hashes are unchanged.
+The complete public clean Windows workflow passed for source commit
+`30899a0542930bbe4197eb133a95a14598233765`:
+https://github.com/falorfrozen-cmd/ModLab/actions/runs/37970294182.
+The private repository's corresponding workflow also passed. These checks
+use fixture data, not a native game session or antivirus certification.
+The final EXE scan showed 2/71 (SecureAge and Zillya). Its ZIP showed 0/61,
+with Zillya timing out and SecureAge unable to process the archive; the ZIP
+result does not clear the EXE detections. Nexus file 399 is unavailable while
+processing at this update. The approved manual package remains recommended.
+Exact hashes and report links are in the public installer scan record.
 
 ## Alpha.4 standard installer validation, 2026-10-10
 

@@ -18,11 +18,13 @@ extract it and follow the included README to copy its two folders into the
 game's `Dungeons/Content/Paks/~mods` directory. It includes the integrated loader
 and the gameplay suite. Start through Steam and press **F10**.
 
-The installer candidates remain quarantined on Nexus. Alpha.4 replaces the
-custom wrapper with a standard Inno Setup wizard and a C# file engine. Its
-EXE scan improved from 8/71 detections to 1/71; its ZIP has a separate 1/68
-detection. Neither scan is an approval or safety guarantee. Do not disable
-security software to install it. See the [scan record](player-installer/SCAN-RESULTS.md).
+The installer candidates have not been cleared for recommendation. Alpha.5
+uses a standard Inno Setup wizard and a C# file engine, and fixes a Windows
+Temp path compatibility issue caught by clean CI. Its EXE scan shows 2/71
+detections, compared with 8/71 for the original wrapper. Nexus processing
+and the separate ZIP result are recorded in the [scan record](player-installer/SCAN-RESULTS.md).
+These observations are not approval or a safety guarantee. Do not disable
+security software to install it.
 
 [Earlier release notes and checksums](https://github.com/falorfrozen-cmd/ModLab/releases/tag/modlab-v0.1.0-alpha.2)
 
