@@ -1,0 +1,31 @@
+name: Installer checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Make transaction-only runtime fixture
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP 'ModLabLoader-runtime-fixture'
+          New-Item -ItemType Directory -Path $fixture | Out-Null
+          $files = foreach ($extension in @('pak','ucas','utoc')) {
+            $name = 'ModLabLoader_P.' + $extension
+            $path = Join-Path $fixture $name
+            [IO.File]::WriteAllText($path, 'CI fixture - not a playable mod')
+            @{ Name=$name; Bytes=(Get-Item -LiteralPath $path).Length; SHA256=(Get-FileHash -LiteralPath $path).Hash }
+          }
+          @{ Schema=1; Version='0.1.0'; SteamBuild=25754144; Files=@($files) } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fixture 'ModLabLoader.manifest.json')
+          "LOADER_CI_FIXTURE=$fixture" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - name: Compile Setup and check transactions / discovery
+        shell: pwsh
+        run: ./tests/run_installer_checks.ps1 -PackageDirectory $env:LOADER_CI_FIXTURE
+      # The CI fixture tests filesystem behavior only. No fake mod installer is
+      # published as an artifact or release; native game validation is separate.

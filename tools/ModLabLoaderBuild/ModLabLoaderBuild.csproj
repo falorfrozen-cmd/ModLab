@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <LoaderToolRoot Condition="'$(LoaderToolRoot)' == ''">$(MSBuildThisFileDirectory)..\neorune-build25754144\tools</LoaderToolRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="UAssetAPI" HintPath="$(LoaderToolRoot)\UAssetAPI.dll" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(LoaderToolRoot)\Newtonsoft.Json.dll" />
+  </ItemGroup>
+</Project>

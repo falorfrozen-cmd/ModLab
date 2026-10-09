@@ -1,0 +1,11 @@
+<Project Sdk="NeoRune.Sdk/0.3.0">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <NeoRuneSdkRoot>$(MSBuildThisFileDirectory)..\..\tools\neorune-build25754144\</NeoRuneSdkRoot>
+    <NeoRuneInstall>false</NeoRuneInstall>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="../../mods/ModLabLoader/Watermark.cs" Link="Watermark.cs" /></ItemGroup>
+  <Target Name="ProbeOwnedHelpers" BeforeTargets="CoreCompile;_NeoRunePrepare">
+    <ItemGroup><Compile Remove="$(NeoRuneSdkRoot)src\Watermark.cs" /></ItemGroup>
+  </Target>
+</Project>

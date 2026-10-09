@@ -1,0 +1,17 @@
+bin/
+obj/
+/dist/
+/diagnostics/
+/tools/neorune-*/
+*.dll
+*.exe
+*.pdb
+*.zip
+*.sav
+*.uasset
+*.uexp
+*.pak
+*.ucas
+*.utoc
+*.log
+.vs/
