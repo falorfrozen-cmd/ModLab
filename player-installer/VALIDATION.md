@@ -1,5 +1,19 @@
 # ModLab alpha validation
 
+## Alpha.5 Temp path compatibility, 2026-10-10
+
+The first clean GitHub runner exposed a failure in alpha.4: Inno extracted
+under an 8.3 user-path alias while TEMP used the long name. The worker rejected
+that valid directory before any game mutation. Alpha.5 normalizes both existing
+paths through Windows GetLongPathName before checking the Temp prefix, retaining
+the directory and reparse-point restrictions. Alpha.4's upload and scan are
+preserved; its reports do not certify the changed alpha.5 executable.
+
+The actual alpha.5 EXE passed the complete temporary-fixture suite, including
+original alpha.2 installation migration. The compiled worker also passed actual
+discovery through an 8.3 alias with a process-local Temp override, occupied
+result rejection and changed manifest rejection. Runtime hashes are unchanged.
+
 ## Alpha.4 standard installer validation, 2026-10-10
 
 The same C# transaction engine is wrapped by standard Inno Setup 7.1.0.

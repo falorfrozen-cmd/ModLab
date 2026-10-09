@@ -26,3 +26,35 @@ if ($workerProcess.ExitCode -eq 0 -or (Test-Path -LiteralPath (Join-Path $worker
 $workerResultText = [IO.File]::ReadAllText($workerResult)
 if (-not $workerResultText.StartsWith('ERROR') -or $workerResultText -notmatch 'missing or changed') { throw 'Worker did not report integrity failure.' }
 Write-Output ('PASS standard worker: occupied result path and altered manifest rejected before any game mutation. Evidence: '+$workerRoot)
+
+# Exercise the same Temp-prefix comparison through an actual 8.3 executable
+# path. Process-local TEMP/TMP avoid modifying the developer's environment.
+Add-Type -TypeDefinition @'
+using System.Runtime.InteropServices;
+using System.Text;
+public static class ModLabShortPathFixture {
+    [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
+    public static extern uint GetShortPathName(string longPath, StringBuilder shortPath, uint capacity);
+}
+'@
+$aliasRoot = Join-Path $workerRoot 'Long temporary path alias fixture'
+$aliasPayload = Join-Path $aliasRoot 'Payload'
+New-Item -ItemType Directory -Path $aliasPayload -Force | Out-Null
+Copy-Item -LiteralPath $workerExecutable -Destination $aliasPayload
+$aliasBuffer = [Text.StringBuilder]::new(32768)
+$aliasLength = [ModLabShortPathFixture]::GetShortPathName($aliasPayload,$aliasBuffer,[uint32]$aliasBuffer.Capacity)
+if ($aliasLength -eq 0 -or $aliasLength -ge $aliasBuffer.Capacity) { throw 'Could not resolve the alias test path.' }
+$aliasStart = [Diagnostics.ProcessStartInfo]::new()
+$aliasStart.FileName = Join-Path $aliasBuffer.ToString() 'ModLabWorker.exe'
+$aliasStart.Arguments = '--discover'
+$aliasStart.UseShellExecute = $false
+$aliasStart.CreateNoWindow = $true
+$aliasStart.EnvironmentVariables['TEMP'] = $aliasRoot
+$aliasStart.EnvironmentVariables['TMP'] = $aliasRoot
+$aliasProcess = [Diagnostics.Process]::Start($aliasStart)
+try {
+    if (-not $aliasProcess.WaitForExit(30000)) { $aliasProcess.Kill(); throw 'Alias worker timed out.' }
+    if ($aliasProcess.ExitCode -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $aliasPayload 'ModLab-games.txt'))) { throw 'Worker rejected its own Temp directory through an alias.' }
+} finally { $aliasProcess.Dispose() }
+if ($aliasBuffer.ToString() -ieq $aliasPayload) { Write-Output 'PASS Temp override; this volume did not expose an 8.3 alias.' }
+else { Write-Output 'PASS actual worker discovery through an 8.3 path alias.' }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ModLab.Setup
@@ -9,6 +10,19 @@ namespace ModLab.Setup
     // runtime archive, UI assets, interpreter or downloaded dependencies.
     public static class NativeWorker
     {
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern uint GetLongPathName(string shortPath, StringBuilder longPath, uint capacity);
+
+        static string ExistingLongPath(string path)
+        {
+            var full = Path.GetFullPath(path);
+            var buffer = new StringBuilder(32768);
+            var length = GetLongPathName(full, buffer, (uint)buffer.Capacity);
+            if (length == 0 || length >= buffer.Capacity)
+                throw new IOException("Cannot resolve the installer temporary path.");
+            return buffer.ToString();
+        }
+
         static void WriteNew(string path, string text)
         {
             using (var stream = new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
@@ -26,7 +40,11 @@ namespace ModLab.Setup
             {
                 // The installer extracts the helper and data into its private Temp.
                 // Command-line use cannot select an arbitrary result destination.
-                if (!directory.StartsWith(Path.GetFullPath(Path.GetTempPath()).TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase) ||
+                // Inno may use an 8.3 alias such as RUNNER~1 while TEMP contains
+                // the long user name. Compare existing long names for both.
+                directory = ExistingLongPath(directory);
+                resultPath = Path.Combine(directory, "ModLab-result.txt");
+                if (!directory.StartsWith(ExistingLongPath(Path.GetTempPath()).TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase) ||
                     (File.GetAttributes(directory) & FileAttributes.ReparsePoint) != 0)
                     throw new ArgumentException("The installer helper must run from its temporary package directory.");
                 canWrite = true;
