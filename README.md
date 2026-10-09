@@ -8,6 +8,16 @@ have not been validated.
 
 ## Download and install
 
+**Looking for the complete ModLab gameplay suite?** Download
+[ModLab Complete — one installer](https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases/tag/modlab-v0.1.0-alpha.1).
+`ModLab-Setup-0.1.0-alpha.1.exe` installs the F10 interface, gameplay features
+and this loader together. **You do not need to install the standalone loader
+first.** Use the combined Setup for subsequent updates and removal too.
+See [complete ModLab installation instructions](docs/MODLAB-COMPLETE.md).
+
+The instructions below are for the **standalone loader**, intended for other
+Blueprint mods and mod developers.
+
 Get the files from [GitHub Releases](https://github.com/falorfrozen-cmd/Minecraft-Dungeons-II-ModLab-Loader/releases).
 
 1. Close Minecraft Dungeons II.
@@ -66,8 +76,8 @@ previous loader back if needed.
   during gameplay. The runtime package is approximately **40 KiB**.
 - Supports an optional diagnostic trace and a command-line skip list.
 
-This package contains **the loader only**. ModLab's gameplay features, F10
-interface, Berserker class and other mods are separate downloads. The loader
+The standalone package contains **the loader only**. The complete ModLab
+installer linked above bundles it with the F10 interface and gameplay suite. The loader
 does not display a permanent startup watermark. Confirm it through a loaded
 mod, or enable diagnostics to check the startup trace.
 
