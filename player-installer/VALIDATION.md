@@ -1,5 +1,60 @@
 # ModLab alpha validation
 
+## Review request and artifact audit, 2026-10-10
+
+The original Gmail send used the wrong account. The request was resent from
+the verified author account at 06:25 on 2026-10-10.
+Gmail's sent-message details confirmed that account and support@nexusmods.com.
+The correction explicitly identifies the earlier sender error. No review
+approval has been received.
+
+The Nexus Files page was subsequently verified: file 399 is quarantined,
+not still processing. Manual package 394 remains downloadable. The EXE's
+unchanged report remains 2/71 (SecureAge and Zillya).
+
+The EXE sandbox report's dropped Inno setup process has a separate 0/71
+report. The process tree did not show ModLabWorker.exe or a completed
+installation. Behavior labels cannot substitute for a worker scan or establish
+which bytes caused the static detections. The alpha.5 worker had no separate
+report; public upload attempts through the report overlay and the home page
+both failed with VirusTotal's incorrectObject error.
+Chrome file-URL access was already enabled, as confirmed by the user; the error
+is not evidence of missing extension permission. No worker scan pass is claimed.
+
+Build integrity controls were added without changing the installer runtime:
+valid Microsoft/Pyrsys compiler signatures are required, compiler/manifest
+hashes are recorded, and existing release outputs are protected against
+overwriting and concurrent builds. Tests rejected unsigned and wrong-publisher
+tools and preserved an existing output sentinel. An isolated rebuild passed
+the actual compiled Setup transaction suite and worker integrity/8.3 checks.
+No rebuilt bytes were uploaded or substituted for alpha.5.
+
+A review request for Nexus file 399 was sent to support@nexusmods.com; Gmail
+confirmed SENT. The request includes source, artifact hashes, build/test
+instructions and the two unresolved detections. This is not Nexus approval.
+
+Microsoft Defender platform 4.18.26080.4, definitions 1.459.641.0, completed
+custom scans of the existing alpha.5 EXE and its prepared payload directory
+with no threats reported. Real-time protection remained enabled. This local
+result does not clear SecureAge or Zillya's EXE classifications.
+
+An independent compilation of the public worker source with the original
+build identity matched 95 method records, including 94 IL bodies, assembly
+references, literal constants and P/Invoke declarations. The two assemblies
+were inspected in separate Windows PowerShell 5.1 reflection-only processes;
+neither worker was executed for the comparison. This is not a byte-for-byte
+reproducible-build claim or comprehensive security certification.
+
+PE inspection identified the worker as an IL-only x64 .NET assembly with no
+overlay. Its sole declared P/Invoke is kernel32.dll / GetLongPathName. The
+Microsoft C# and Pyrsys Inno compiler signatures are valid; the Setup and
+worker are unsigned. All eight runtime inputs still match the manifest.
+The uploaded alpha.5 EXE and ZIP hashes remain unchanged.
+
+Further evidence and exact hashes are in the public
+player-installer/SCAN-RESULTS.md record. No established false positive or
+resolved antivirus warning is claimed.
+
 ## Alpha.5 Temp path compatibility, 2026-10-10
 
 The first clean GitHub runner exposed a failure in alpha.4: Inno extracted
@@ -20,8 +75,8 @@ The private repository's corresponding workflow also passed. These checks
 use fixture data, not a native game session or antivirus certification.
 The final EXE scan showed 2/71 (SecureAge and Zillya). Its ZIP showed 0/61,
 with Zillya timing out and SecureAge unable to process the archive; the ZIP
-result does not clear the EXE detections. Nexus file 399 is unavailable while
-processing at this update. The approved manual package remains recommended.
+result does not clear the EXE detections. Nexus file 399 was subsequently
+verified as quarantined. The approved manual package remains recommended.
 Exact hashes and report links are in the public installer scan record.
 
 ## Alpha.4 standard installer validation, 2026-10-10

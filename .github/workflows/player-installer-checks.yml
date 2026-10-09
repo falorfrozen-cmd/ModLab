@@ -45,6 +45,7 @@ jobs:
       - name: Compile and test the standard Setup EXE
         shell: pwsh
         run: |
+          ./tests/check_installer_build_guard.ps1 -InnoCompiler $env:MODLAB_INNO_COMPILER
           ./tools/build_standard_installer.ps1 -PackageDirectory $env:MODLAB_CI_FIXTURE -InnoCompiler $env:MODLAB_INNO_COMPILER -Version 0.1.0-alpha.5
           ./tests/check_standard_worker.ps1 -BuildMetadata ./dist/player/standard-installer-build.json
           ./tests/check_modlab_setup.ps1 -SetupPath ./dist/player/ModLab-Setup-0.1.0-alpha.5.exe -PackageDirectory $env:MODLAB_CI_FIXTURE -StandardSetup

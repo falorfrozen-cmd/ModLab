@@ -21,7 +21,7 @@ and the gameplay suite. Start through Steam and press **F10**.
 The installer candidates have not been cleared for recommendation. Alpha.5
 uses a standard Inno Setup wizard and a C# file engine, and fixes a Windows
 Temp path compatibility issue caught by clean CI. Its EXE scan shows 2/71
-detections, compared with 8/71 for the original wrapper. Nexus processing
+detections, compared with 8/71 for the original wrapper. Nexus quarantine
 and the separate ZIP result are recorded in the [scan record](player-installer/SCAN-RESULTS.md).
 These observations are not approval or a safety guarantee. Do not disable
 security software to install it.

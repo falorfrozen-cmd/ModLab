@@ -1,16 +1,26 @@
 param(
     [Parameter(Mandatory=$true)][string]$PackageDirectory,
     [Parameter(Mandatory=$true)][string]$InnoCompiler,
-    [string]$Version = '0.1.0-alpha.5'
+    [string]$Version = '0.1.0-alpha.5',
+    [string]$OutputDirectory
 )
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^\d+\.\d+\.\d+(?:-[a-z0-9.]+)?$') { throw 'Invalid release version.' }
 $standardRoot = Split-Path $PSScriptRoot -Parent
+. (Join-Path $PSScriptRoot 'installer_build_guard.ps1')
+$standardCompiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+$standardCompilerAudit = Assert-ModLabCompiler $standardCompiler 'Microsoft Corporation'
+$standardInnoAudit = Assert-ModLabCompiler $InnoCompiler 'Pyrsys B.V.'
+$InnoCompiler = $standardInnoAudit.Path
+$standardOutput = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $standardRoot 'dist\player' }
+Assert-ModLabBuildOutput $standardOutput $Version
 $standardStage = Join-Path $standardRoot ('bin\StandardInstaller-' + [guid]::NewGuid().ToString('N'))
 $standardPayload = Join-Path $standardStage 'Payload'
-$standardOutput = Join-Path $standardRoot 'dist\player'
-New-Item -ItemType Directory -Path $standardPayload -Force | Out-Null
 New-Item -ItemType Directory -Path $standardOutput -Force | Out-Null
+$standardBuildLock = [IO.FileStream]::new((Join-Path $standardOutput ('.ModLab-'+$Version+'.build.lock')), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+try {
+Assert-ModLabBuildOutput $standardOutput $Version
+New-Item -ItemType Directory -Path $standardPayload -Force | Out-Null
 $standardManifestPath = Join-Path $PackageDirectory 'ModLab.manifest.json'
 $standardManifest = Get-Content -LiteralPath $standardManifestPath -Raw | ConvertFrom-Json
 $standardNames = @('ModLabLoader_P.pak','ModLabLoader_P.ucas','ModLabLoader_P.utoc','QoLSuite_P.pak','QoLSuite_P.ucas','QoLSuite_P.utoc','ModLab.html','BerserkerBuffs.png')
@@ -38,7 +48,6 @@ using System.Reflection;
 [assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 namespace ModLab.Setup { public static class BuildIdentity { public const string ManifestSha256 = "$standardManifestHash"; } }
 "@ | Set-Content -LiteralPath $standardIdentity -Encoding UTF8
-$standardCompiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $standardWorker = Join-Path $standardPayload 'ModLabWorker.exe'
 & $standardCompiler '/nologo' '/target:winexe' '/platform:x64' '/optimize+' '/warn:4' '/warnaserror+' '/codepage:65001' ('/out:'+$standardWorker) ('/win32manifest:'+(Join-Path $standardRoot 'player-installer\app.manifest')) '/reference:System.Web.Extensions.dll' (Join-Path $standardRoot 'player-installer\SteamDiscovery.cs') (Join-Path $standardRoot 'player-installer\NativeTransaction.cs') (Join-Path $standardRoot 'player-installer\NativeWorker.cs') $standardIdentity
 if ($LASTEXITCODE -ne 0) { throw 'Native worker compilation failed.' }
@@ -54,5 +63,8 @@ if (-not (Test-Path -LiteralPath $standardInnoLicense)) { throw 'Compiler licens
 & $InnoCompiler '/Qp' ('/DModLabVersion='+$Version) ('/DPayloadDir='+$standardPayload) ('/DOutputDir='+$standardOutput) (Join-Path $standardRoot 'player-installer\ModLab.iss')
 if ($LASTEXITCODE -ne 0) { throw 'Standard Setup compilation failed.' }
 $standardExe = Join-Path $standardOutput ('ModLab-Setup-'+$Version+'.exe')
-@{ Kind='Standard'; Version=$Version; Executable=$standardExe; BuildDirectory=$standardStage; PayloadDirectory=$standardPayload; Identity=$standardIdentity; Compiler=$standardCompiler; InnoCompiler=$InnoCompiler; WorkerSHA256=(Get-FileHash -LiteralPath $standardWorker).Hash; SHA256=(Get-FileHash -LiteralPath $standardExe).Hash } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $standardOutput 'standard-installer-build.json') -Encoding UTF8
+$standardBuildRecord = @{ Kind='Standard'; Version=$Version; Executable=$standardExe; BuildDirectory=$standardStage; PayloadDirectory=$standardPayload; Identity=$standardIdentity; Compiler=$standardCompiler; InnoCompiler=$InnoCompiler; CompilerAudit=$standardCompilerAudit; InnoCompilerAudit=$standardInnoAudit; ManifestSHA256=$standardManifestHash; WorkerSHA256=(Get-FileHash -LiteralPath $standardWorker).Hash; SHA256=(Get-FileHash -LiteralPath $standardExe).Hash } | ConvertTo-Json -Depth 4
+$standardBuildRecord | Set-Content -LiteralPath (Join-Path $standardOutput ('standard-installer-build-'+$Version+'.json')) -Encoding UTF8
+$standardBuildRecord | Set-Content -LiteralPath (Join-Path $standardOutput 'standard-installer-build.json') -Encoding UTF8
 Write-Output ('Standard Setup compiled: '+$standardExe)
+} finally { $standardBuildLock.Dispose() }

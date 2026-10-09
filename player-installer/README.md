@@ -60,6 +60,18 @@ metadata, worker hash and generated manifest binding are recorded in
 compare source and extracted runtime hashes rather than expecting byte-identical
 EXEs across separate builds.
 
+The build requires valid Microsoft and Pyrsys compiler signatures before
+invoking those tools. It records their hashes, certificate identities and the
+manifest hash, and preserves a versioned
+`standard-installer-build-<version>.json` record. Existing EXEs or versioned
+records cannot be overwritten. An exclusive lock rejects simultaneous builds
+of the same version/output. For a local rebuild, use
+`-OutputDirectory 'C:\ModLab-rebuild'` and use that directory's metadata in the
+checks above. Preserve uploaded release bytes and their scan identity.
+Run `./tests/check_installer_build_guard.ps1 -InnoCompiler '<ISCC.exe path>'`
+to verify unsigned/wrong-publisher compiler rejection and existing-output
+preservation. These controls do not clear antivirus detections.
+
 The tests use temporary fixtures with Inno's `/CURRENTUSER` option and never
 install to the protected real game folder. The final EXE was additionally
 checked for migration from the previously released alpha.2 EXE:

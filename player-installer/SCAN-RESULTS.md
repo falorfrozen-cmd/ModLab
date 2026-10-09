@@ -12,10 +12,9 @@ passed. This is a functional fix, independent of antivirus classification.
 Alpha.5 was submitted as Nexus file **399**. Its EXE shows **2/71**:
 SecureAge `Malicious` and Zillya `Backdoor.Agent.Win32.101941`. The completed
 ZIP report shows **0/61**, with Zillya timing out and SecureAge unable to
-process the archive. This does not clear the EXE's two detections. Nexus file
-399 was unavailable while processing at the last verified browser check. Its
-current Nexus status could not be refreshed on 2026-10-10 because the browser
-connection was unavailable. Alpha.4 reports
+process the archive. This does not clear the EXE's two detections. The Nexus
+Files page was verified on 2026-10-10: file **399 is quarantined**. The
+approved manual package, file **394**, remains downloadable. Alpha.4 reports
 below do not apply to the changed EXE.
 
 Alpha.5 EXE SHA-256:
@@ -63,7 +62,9 @@ part of this installer.
 ## Review request and additional checks
 
 The author sent a review request for file **399** to `support@nexusmods.com`
-on **2026-10-10**. Gmail confirmed the message's `SENT` status. The request
+on **2026-10-10**. An initial send used the wrong Gmail account. A corrected
+request was sent from the verified author account at 06:25 local time;
+Gmail's sent-message details confirmed the sender and recipient. The request
 includes the source revision, hashes, build/test instructions, CI evidence
 and both remaining detections. Sending the request is not Nexus approval.
 
@@ -90,9 +91,28 @@ hashes above remain unchanged:
 
 Current alpha.5 build worker SHA-256:
 `56E2CECBA9FC421733B151B0A0FC8577DB80960C848919BC16F578AE90F28DA1`.
-Its separate VirusTotal classification could not be verified; do not treat
-that as a zero-detection report. No exact detection rule or confirmed false
-positive decision is available for the two flagged EXE engines.
+Its separate VirusTotal classification could not be verified. Public upload
+attempts through the report overlay and home page failed with
+`incorrectObject:true`. File-URL access was already enabled in the browser
+extension; this is not evidence of a missing permission. No scan was completed.
+No exact detection rule or confirmed false-positive decision is available for
+the two flagged EXE engines.
+
+The EXE's sandbox process tree showed a dropped Inno setup executable with a
+separate **0/71** report, SHA-256
+`CC98F1B920476ECBFB85773308FD13C5F7D52F2FA500ECB4A9DAB3295AE42009`.
+[Dropped setup report](https://www.virustotal.com/gui/file/cc98f1b920476ecbfb85773308fd13c5f7d52f2fa500ecb4a9dab3295ae42009).
+The tree did not show the ModLab worker or a completed installation. This
+result cannot clear the outer EXE, certify the worker or identify the cause
+of the remaining static detections.
+
+Build-time controls now require valid Microsoft/Pyrsys compiler signatures,
+record tool and manifest hashes and prevent replacement of an existing
+release output. An exclusive lock prevents simultaneous builds of the same
+version/output. An isolated build passed the compiled Setup transaction suite
+and worker integrity/8.3 path checks. No replacement artifact was uploaded;
+the alpha.5 hashes above remain unchanged. These controls improve build
+integrity and do not clear antivirus detections.
 
 Original reports: [alpha.2 EXE](https://www.virustotal.com/gui/file/6b566f2b8c4074b1107386f54728e7a935551e08ea50e58c7e22857d0b0f3cbb),
 [alpha.2 ZIP](https://www.virustotal.com/gui/file/f79587893c1915f3b8509d0991536e6571a9a43fb8a76ebaba21d04522016621),
