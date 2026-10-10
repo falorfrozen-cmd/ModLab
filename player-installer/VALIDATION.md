@@ -1,5 +1,26 @@
 # ModLab alpha validation
 
+## Component rescans, 2026-10-10
+
+The unchanged alpha.5 EXE was reanalysed at 06:48:58 GMT+7 and now shows
+3/71: Microsoft Trojan:Win32/Wacatac.B!ml, SecureAge Malicious and Zillya
+Backdoor.Agent.Win32.101941. The worker upload succeeded through the in-app
+browser; its separate 06:50:10 report shows 3/71: Bkav Pro, McAfee Scanner
+and SecureAge. Microsoft and Zillya report Undetected for the worker.
+The differing component results do not identify a specific vendor rule.
+
+Defender definitions were updated to 1.459.645.0; scan-only custom scans of
+both preserved samples reported no threats and exit code 0. Real-time
+protection remained enabled. This local result does not override VirusTotal.
+No runtime or uploaded artifact was changed for these checks.
+
+SecureAge's official form accepted the original EXE and source/report evidence
+and displayed Report Submitted. Zillya's form subsequently displayed
+Submitted successfully. Both used the verified author contact address.
+These acknowledgements confirm delivery, not reclassification or Nexus approval.
+No confirmed false-positive determination is claimed.
+Exact hashes, times and report links are in the public installer scan record.
+
 ## Review request and artifact audit, 2026-10-10
 
 The original Gmail send used the wrong account. The request was resent from
@@ -10,16 +31,17 @@ approval has been received.
 
 The Nexus Files page was subsequently verified: file 399 is quarantined,
 not still processing. Manual package 394 remains downloadable. The EXE's
-unchanged report remains 2/71 (SecureAge and Zillya).
+initial report showed 2/71 (SecureAge and Zillya); see the subsequent rescan above.
 
 The EXE sandbox report's dropped Inno setup process has a separate 0/71
 report. The process tree did not show ModLabWorker.exe or a completed
 installation. Behavior labels cannot substitute for a worker scan or establish
-which bytes caused the static detections. The alpha.5 worker had no separate
+which bytes caused the static detections. Initially the alpha.5 worker had no separate
 report; public upload attempts through the report overlay and the home page
 both failed with VirusTotal's incorrectObject error.
 Chrome file-URL access was already enabled, as confirmed by the user; the error
-is not evidence of missing extension permission. No worker scan pass is claimed.
+is not evidence of missing extension permission. The subsequent successful
+upload is recorded above; no worker scan pass is claimed.
 
 Build integrity controls were added without changing the installer runtime:
 valid Microsoft/Pyrsys compiler signatures are required, compiler/manifest

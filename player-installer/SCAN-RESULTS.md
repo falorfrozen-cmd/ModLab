@@ -4,12 +4,47 @@ Functional installation tests passed. Antivirus acceptance is a separate,
 unresolved release requirement. No vendor has provided its detection rule.
 These counts are observations at the time of review and can change.
 
+## Latest component checks, 06:48–06:50 GMT+7
+
+The unchanged alpha.5 EXE was reanalysed on 2026-10-10 at 06:48:58.
+Its completed report now shows **3/71**: Microsoft
+`Trojan:Win32/Wacatac.B!ml`, SecureAge `Malicious` and Zillya
+`Backdoor.Agent.Win32.101941`. The earlier 2/71 result below is historical.
+
+The worker upload succeeded through the in-app browser after the Chrome
+upload flow returned `incorrectObject`. This is a working alternative,
+not a proven explanation of that frontend error. The exact released worker
+was scanned separately at 06:50:10; its completed report shows **3/71**:
+Bkav Pro `W32.Malware.D6FBBCF1`, McAfee Scanner `Ti!56E2CECBA9FC`, and
+SecureAge `Malicious`. Microsoft and Zillya report `Undetected` for this
+worker. This narrows which artifacts those engines flag, without establishing
+why, certifying the runtime, or confirming a false positive.
+[Worker report](https://www.virustotal.com/gui/file/56e2cecba9fc421733b151b0a0fc8577db80960c848919bc16f578ae90f28da1).
+
+Microsoft Defender definitions were updated to **1.459.645.0**. Scan-only
+custom scans of the unchanged EXE and worker each returned `found no threats`
+and exit code 0. Real-time protection remained enabled; no exclusions or
+global security changes were made. The local result differs from the
+Microsoft VirusTotal result and does not override it.
+
+SecureAge's official form accepted the preserved EXE, source/report links
+and a request to identify any unsafe behavior. It displayed **Report
+Submitted**, stating that the submission went to the detection team.
+Zillya's official form subsequently displayed **Submitted successfully!**.
+Both forms used the verified author contact address and the original EXE.
+These are delivery confirmations, not classification changes or Nexus approval.
+
+[VirusTotal's guidance](https://docs.virustotal.com/docs/false-positive-contacts)
+recommends rescanning and then contacting the detecting vendor; VirusTotal
+cannot modify the vendors' scan decisions. No random recompilation,
+hash-changing variant, security exclusion or replacement Nexus upload was used.
+
 Alpha.5 fixes a real alpha.4 compatibility failure caught by clean Windows CI:
 the helper compared an 8.3 Temp alias against a long TEMP path. The corrected
 worker resolves both existing names before validating the Temp prefix. The
 actual compiled EXE and the [clean Windows workflow](https://github.com/falorfrozen-cmd/ModLab/actions/runs/37970294182)
 passed. This is a functional fix, independent of antivirus classification.
-Alpha.5 was submitted as Nexus file **399**. Its EXE shows **2/71**:
+Alpha.5 was submitted as Nexus file **399**. Its initial EXE report showed **2/71**:
 SecureAge `Malicious` and Zillya `Backdoor.Agent.Win32.101941`. The completed
 ZIP report shows **0/61**, with Zillya timing out and SecureAge unable to
 process the archive. This does not clear the EXE's two detections. The Nexus
@@ -91,12 +126,13 @@ hashes above remain unchanged:
 
 Current alpha.5 build worker SHA-256:
 `56E2CECBA9FC421733B151B0A0FC8577DB80960C848919BC16F578AE90F28DA1`.
-Its separate VirusTotal classification could not be verified. Public upload
+Initially its separate VirusTotal classification could not be verified. Public upload
 attempts through the report overlay and home page failed with
 `incorrectObject:true`. File-URL access was already enabled in the browser
-extension; this is not evidence of a missing permission. No scan was completed.
+extension; this is not evidence of a missing permission. Those attempts did
+not complete a scan. The subsequent successful upload is recorded above.
 No exact detection rule or confirmed false-positive decision is available for
-the two flagged EXE engines.
+the flagged EXE engines.
 
 The EXE's sandbox process tree showed a dropped Inno setup executable with a
 separate **0/71** report, SHA-256
