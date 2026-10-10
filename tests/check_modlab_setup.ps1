@@ -80,7 +80,7 @@ Invoke-Setup Install $true | Out-Null
 Assert-Installed
 foreach ($path in $oldPaths) { if (Test-Path -LiteralPath $path) { throw 'Conflicting loader remains mounted.' } }
 $beforeUpdate = Snapshot (@($checkPackage.Files | ForEach-Object { Join-Path $checkMods $_.RelativePath }) + $checkState)
-$beforeOriginals = (Get-Content -LiteralPath $checkState -Raw | ConvertFrom-Json).Originals | ConvertTo-Json -Depth 6 -Compress
+$beforeOriginals = (Get-Content -LiteralPath $checkState -Raw -Encoding UTF8 | ConvertFrom-Json).Originals | ConvertTo-Json -Depth 6 -Compress
 # Deny deletion of the last runtime file, forcing rollback after seven moves.
 $locked = [IO.File]::Open((Join-Path $checkMods 'QoLSuite\BerserkerBuffs.png'),[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read)
 try {
@@ -90,20 +90,20 @@ try {
 } finally { $locked.Dispose() }
 Assert-Snapshot $beforeUpdate
 Invoke-Setup Install $true | Out-Null
-if (((Get-Content -LiteralPath $checkState -Raw | ConvertFrom-Json).Originals | ConvertTo-Json -Depth 6 -Compress) -ne $beforeOriginals) { throw 'Update lost the original baseline.' }
+if (((Get-Content -LiteralPath $checkState -Raw -Encoding UTF8 | ConvertFrom-Json).Originals | ConvertTo-Json -Depth 6 -Compress) -ne $beforeOriginals) { throw 'Update lost the original baseline.' }
 Write-Fixture $checkManifest '"appid" "1912410" "buildid" "999"'
 $beforeRejection = Snapshot (@($checkPackage.Files | ForEach-Object { Join-Path $checkMods $_.RelativePath }) + $checkState)
 Invoke-Setup Install $false | Out-Null
 Assert-Snapshot $beforeRejection
 Write-Fixture $checkManifest '"appid" "1912410" "buildid" "25754144"'
 # Tampered ownership records are rejected before any file is moved.
-$originalStateText = Get-Content -LiteralPath $checkState -Raw
+$originalStateText = Get-Content -LiteralPath $checkState -Raw -Encoding UTF8
 $badState = $originalStateText | ConvertFrom-Json
 $badState.Installed[7].RelativePath = '..\escape.png'
 $badState | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $checkState -Encoding UTF8
 Invoke-Setup Restore $false | Out-Null
 Assert-Installed
-[IO.File]::WriteAllText($checkState,$originalStateText)
+[IO.File]::WriteAllText($checkState,$originalStateText,[Text.UTF8Encoding]::new($false))
 Invoke-Setup Restore $true | Out-Null
 Assert-Removed
 Assert-Snapshot $oldSnapshot

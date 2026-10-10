@@ -40,6 +40,16 @@ RestartApplications=no
 DisableReadyPage=no
 DisableFinishedPage=no
 VersionInfoVersion=0.1.0.0
+VersionInfoCompany=falorfrozen-cmd
+VersionInfoDescription=ModLab Setup for Minecraft Dungeons II
+VersionInfoProductName=ModLab
+VersionInfoProductVersion=0.1.0.0
+VersionInfoProductTextVersion={#ModLabVersion}
+VersionInfoCopyright=Copyright (C) 2026 falorfrozen-cmd
+VersionInfoOriginalFileName=ModLab-Setup-{#ModLabVersion}.exe
+#ifdef SetupIconFile
+SetupIconFile={#SetupIconFile}
+#endif
 InfoBeforeFile={#PayloadDir}\NOTICES.txt
 
 [Files]

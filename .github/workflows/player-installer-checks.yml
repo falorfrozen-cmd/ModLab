@@ -28,6 +28,13 @@ jobs:
       - name: Compile and test the combined Setup EXE
         shell: pwsh
         run: ./tests/run_player_installer_checks.ps1 -PackageDirectory $env:MODLAB_CI_FIXTURE
+      - name: Compile and test the portable Setup distribution
+        shell: pwsh
+        run: |
+          $portableOutput = Join-Path $env:RUNNER_TEMP 'ModLab-portable-fixture-build'
+          ./tools/build_portable_installer.ps1 -PackageDirectory $env:MODLAB_CI_FIXTURE -Version 0.1.0-alpha.7 -OutputDirectory $portableOutput
+          $portableBuild = Get-Content -LiteralPath (Join-Path $portableOutput 'portable-installer-build.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+          ./tests/check_portable_setup.ps1 -DistributionZip (Join-Path $portableOutput 'ModLab-0.1.0-alpha.7-Portable-Setup.zip') -ExpectedExecutableSHA256 $portableBuild.SHA256
       - name: Verify and install official Inno compiler
         shell: pwsh
         run: |
@@ -46,8 +53,8 @@ jobs:
         shell: pwsh
         run: |
           ./tests/check_installer_build_guard.ps1 -InnoCompiler $env:MODLAB_INNO_COMPILER
-          ./tools/build_standard_installer.ps1 -PackageDirectory $env:MODLAB_CI_FIXTURE -InnoCompiler $env:MODLAB_INNO_COMPILER -Version 0.1.0-alpha.5
+          ./tools/build_standard_installer.ps1 -PackageDirectory $env:MODLAB_CI_FIXTURE -InnoCompiler $env:MODLAB_INNO_COMPILER -Version 0.1.0-alpha.6
           ./tests/check_standard_worker.ps1 -BuildMetadata ./dist/player/standard-installer-build.json
-          ./tests/check_modlab_setup.ps1 -SetupPath ./dist/player/ModLab-Setup-0.1.0-alpha.5.exe -PackageDirectory $env:MODLAB_CI_FIXTURE -StandardSetup
+          ./tests/check_modlab_setup.ps1 -SetupPath ./dist/player/ModLab-Setup-0.1.0-alpha.6.exe -PackageDirectory $env:MODLAB_CI_FIXTURE -StandardSetup
       # Tests use fake bytes only for filesystem behavior. They do not publish
       # an artifact, substitute for native game validation or contain game files.

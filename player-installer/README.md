@@ -1,9 +1,13 @@
 # Complete ModLab installer source
 
-This directory contains the full source of the **alpha.5 standard player
-installer**, including its C# transaction engine. Alpha.5 fixes the Temp path
-alias compatibility issue found by the clean Windows runner. One EXE installs the gameplay
-suite and integrated loader together.
+This directory contains the full source of the **alpha.6 standard player
+installer candidate**, including its C# transaction engine. Alpha.6 is an
+installer-only candidate over the unchanged eight runtime files: it adds a
+custom Setup/worker icon, complete version metadata and an optional
+code-signing step in the build (see
+[AV-ANALYSIS-2026-10-10.md](AV-ANALYSIS-2026-10-10.md)). Alpha.5 fixed the
+Temp path alias compatibility issue found by the clean Windows runner. One EXE
+installs the gameplay suite and integrated loader together.
 
 The original standalone loader source remains in `installer/`. The alpha.3
 custom WinForms wrapper is retained here for comparison; its scan did not
@@ -31,9 +35,12 @@ runtime files are build inputs. Rebuilding Setup from them needs no game SDK.
 - Uses stock installer compression. No custom obfuscation, anti-debug check,
   artificial delay or antivirus exclusion is added by ModLab.
 
-The EXE is unsigned. [Antivirus scan observations](SCAN-RESULTS.md) are recorded separately from
-functional tests. No scan guarantees safety. The separately documented game
-shutdown issue is not resolved by installer changes.
+The EXE is unsigned. The build supports an optional CA-issued code-signing
+certificate (`-SignToolPath` + `-SignCertificateThumbprint` in
+`tools/build_standard_installer.ps1`); without one the EXE and worker remain
+unsigned. [Antivirus scan observations](SCAN-RESULTS.md) are recorded
+separately from functional tests. No scan guarantees safety. The separately
+documented game shutdown issue is not resolved by installer changes.
 
 ## Build on Windows
 
@@ -49,14 +56,22 @@ Requires .NET Framework 4.8 and the C# compiler shipped with Windows, plus the
 3. Run from the repository root:
 
    ```powershell
-   ./tools/build_standard_installer.ps1 -PackageDirectory 'C:\ModLab-runtime' -InnoCompiler 'C:\Program Files\Inno Setup 7\ISCC.exe' -Version 0.1.0-alpha.5
+   ./tools/build_standard_installer.ps1 -PackageDirectory 'C:\ModLab-runtime' -InnoCompiler 'C:\Program Files\Inno Setup 7\ISCC.exe' -Version 0.1.0-alpha.6
    ./tests/check_standard_worker.ps1 -BuildMetadata './dist/player/standard-installer-build.json'
-   ./tests/check_modlab_setup.ps1 -SetupPath './dist/player/ModLab-Setup-0.1.0-alpha.5.exe' -PackageDirectory 'C:\ModLab-runtime' -StandardSetup
+   ./tests/check_modlab_setup.ps1 -SetupPath './dist/player/ModLab-Setup-0.1.0-alpha.6.exe' -PackageDirectory 'C:\ModLab-runtime' -StandardSetup
    ```
 
-The EXE is written to `dist/player/ModLab-Setup-0.1.0-alpha.5.exe`. Build
+The Setup and worker icon comes from `ModLab.ico` in this directory (generated
+by `tools/make_modlab_icon.py`). Both binaries carry complete version
+metadata. To sign a release, add
+`-SignToolPath <signtool.exe> -SignCertificateThumbprint <thumbprint>`; the
+worker is signed before Inno embeds it and the Setup is signed after
+compilation, and the build record carries the signer certificate.
+
+The EXE is written to `dist/player/ModLab-Setup-0.1.0-alpha.6.exe`. Build
 metadata, worker hash and generated manifest binding are recorded in
-`dist/player/standard-installer-build.json`. Compiler timestamps may differ;
+`dist/player/standard-installer-build.json`; the record also carries the icon
+hash and, when signing is used, the signer certificate. Compiler timestamps may differ;
 compare source and extracted runtime hashes rather than expecting byte-identical
 EXEs across separate builds.
 
@@ -77,7 +92,7 @@ install to the protected real game folder. The final EXE was additionally
 checked for migration from the previously released alpha.2 EXE:
 
 ```powershell
-./tests/check_modlab_setup.ps1 -SetupPath 'C:\ModLab-Setup-0.1.0-alpha.5.exe' -PackageDirectory 'C:\ModLab-runtime' -PreviousSetupPath 'C:\ModLab-Setup-0.1.0-alpha.2.exe' -StandardSetup
+./tests/check_modlab_setup.ps1 -SetupPath 'C:\ModLab-Setup-0.1.0-alpha.6.exe' -PackageDirectory 'C:\ModLab-runtime' -PreviousSetupPath 'C:\ModLab-Setup-0.1.0-alpha.2.exe' -StandardSetup
 ```
 
 The native engine's detection, integrity, concurrency and running-game checks

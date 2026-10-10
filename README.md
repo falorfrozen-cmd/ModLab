@@ -18,11 +18,14 @@ extract it and follow the included README to copy its two folders into the
 game's `Dungeons/Content/Paks/~mods` directory. It includes the integrated loader
 and the gameplay suite. Start through Steam and press **F10**.
 
-The installer candidates have not been cleared for recommendation. Alpha.5
-uses a standard Inno Setup wizard and a C# file engine, and fixes a Windows
-Temp path compatibility issue caught by clean CI. Its latest EXE scan shows
-3/71 detections. Separate component scans, Nexus quarantine
-and the separate ZIP result are recorded in the [scan record](player-installer/SCAN-RESULTS.md).
+The installer candidates have not been cleared for recommendation. The latest
+alpha.7 portable candidate uses a normal desktop application beside the same
+eight runtime files, with no embedded executable or separately launched worker.
+Its completed EXE scan shows 2/71 detections (McAfee Scanner and SecureAge).
+The ZIP's 0/66 result does not clear the separately flagged EXE. Transaction,
+rollback and alpha.2 migration tests passed; antivirus review remains open.
+Separate component scans, packaging comparisons and Nexus quarantine are
+recorded in the [scan record](player-installer/SCAN-RESULTS.md).
 These observations are not approval or a safety guarantee. Do not disable
 security software to install it.
 

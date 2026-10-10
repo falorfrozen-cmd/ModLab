@@ -1,5 +1,32 @@
 # ModLab alpha validation
 
+## Alpha.6 installer candidate, 2026-10-10
+
+Alpha.6 is an installer-only candidate built from the unchanged eight runtime
+files (manifest SHA-256 `A62272F6…29EF5`). Changes are limited to packaging:
+custom Setup/worker icon, complete version metadata, and an optional signing
+step in `tools/build_standard_installer.ps1` (`-SignToolPath` +
+`-SignCertificateThumbprint`; inert without a certificate). Runtime bytes,
+transaction logic, verification, backups and rollback are unchanged.
+
+- EXE: `dist/candidates/0.1.0-alpha.6/ModLab-Setup-0.1.0-alpha.6.exe`,
+  9,983,985 bytes, SHA-256 `EEE41A5B…70B89E`.
+- Worker SHA-256 `CD413994…EE1E63C0`; build record
+  `dist/candidates/0.1.0-alpha.6/standard-installer-build.json`.
+- `tests/check_standard_worker.ps1` PASS; `tests/check_modlab_setup.ps1
+  -StandardSetup -PreviousSetupPath ModLab-Setup-0.1.0-alpha.2.exe` PASS
+  (fresh install/update/removal, loader adoption, rollback, invalid state,
+  Unicode/space/dollar paths, alpha.2 ownership migration) under PowerShell
+  7.6.5 and Windows PowerShell 5.1.
+- The UTF-8 ownership-JSON reads/writes in `check_modlab_setup.ps1` are now
+  encoding-explicit; Windows PowerShell 5.1 previously produced a false
+  "another game folder" failure on the Unicode fixture path.
+- Local Defender scans (definitions 1.459.645.0): no threats. Supporting
+  evidence only; no false-positive determination is claimed.
+- No VirusTotal scan of alpha.6 exists yet; upload the exact files and record
+  completed results before any submission. Full analysis:
+  `player-installer/AV-ANALYSIS-2026-10-10.md`.
+
 ## Component rescans, 2026-10-10
 
 The unchanged alpha.5 EXE was reanalysed at 06:48:58 GMT+7 and now shows
@@ -24,7 +51,7 @@ Exact hashes, times and report links are in the public installer scan record.
 ## Review request and artifact audit, 2026-10-10
 
 The original Gmail send used the wrong account. The request was resent from
-the verified author account at 06:25 on 2026-10-10.
+the verified author account, falorfrozen@gmail.com, at 06:25 on 2026-10-10.
 Gmail's sent-message details confirmed that account and support@nexusmods.com.
 The correction explicitly identifies the earlier sender error. No review
 approval has been received.
@@ -74,7 +101,7 @@ worker are unsigned. All eight runtime inputs still match the manifest.
 The uploaded alpha.5 EXE and ZIP hashes remain unchanged.
 
 Further evidence and exact hashes are in the public
-player-installer/SCAN-RESULTS.md record. No established false positive or
+player-player-installer/SCAN-RESULTS.md record. No established false positive or
 resolved antivirus warning is claimed.
 
 ## Alpha.5 Temp path compatibility, 2026-10-10
@@ -128,7 +155,7 @@ removing PowerShell did not establish the cause. The final alpha.4 EXE showed
 (Zillya: Backdoor.Agent.Win32.101941). Nexus file 397 remains quarantined.
 No vendor rule has been disclosed and no safety guarantee is claimed. The
 approved manual package remains primary. The public installer source includes
-the exact artifact hashes and report links in `player-installer/SCAN-RESULTS.md`.
+the exact artifact hashes and report links in `player-player-installer/SCAN-RESULTS.md`.
 
 ## Alpha.3 installer-only validation, 2026-10-10
 
@@ -216,3 +243,28 @@ package-free controls. This release does not claim to resolve it.
 
 These checks do not establish compatibility with other game builds, launchers
 or multiplayer, nor certify every gameplay feature in this alpha.
+
+## alpha.7 portable installer candidate (2026-10-10)
+
+Only the installation application and distribution layout changed. The eight
+runtime files and their manifest are byte-identical to alpha.6 and the actual
+installed game runtime. `NativeTransaction.cs` and `SteamDiscovery.cs` were
+reused without source changes. The real game installation was not modified.
+
+The exact `ModLab.exe`, SHA-256
+`D6436B1C3A57CAAE41BB20D3D78C8AF147076C331A17B461C6C0665BE65B6D62`,
+was tested after extraction from the complete distribution ZIP, SHA-256
+`87F7656BA3A30C4EE310F34B0F121755A25FA5F3B3DAE716610B0A51E6456DCE`.
+`tests/check_portable_setup.ps1` passed under PowerShell 7.6.5 and Windows
+PowerShell 5.1, including the existing compiled transaction suite and migration
+from the released alpha.2 Setup. Additional checks rejected an occupied result
+destination, altered or missing external manifest, and an altered runtime file
+before any game mutation. Local Defender reported no threats for this EXE.
+
+The new GUI has not been visually exercised. Completed VirusTotal scans on
+2026-10-10 report **2/71** for the exact EXE (McAfee Scanner and SecureAge) and
+**0/66** for the ZIP. SecureAge could not process the ZIP and Zillya failed on
+the archive, so that result does not clear the separately flagged EXE. The
+empty Inno engine control reports **0/71**. This is a candidate only; it has
+not been published or approved on Nexus. Functional test success and local
+Defender scans do not resolve the two remaining detections.

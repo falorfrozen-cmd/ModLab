@@ -1,0 +1,43 @@
+{
+  "Completed": true,
+  "Date": "2026-10-10",
+  "Timezone": "Asia/Bangkok",
+  "ReleaseApproved": false,
+  "RuntimeBytesChanged": false,
+  "Installer": {
+    "SHA256": "D6436B1C3A57CAAE41BB20D3D78C8AF147076C331A17B461C6C0665BE65B6D62",
+    "AnalysisTime": "2026-10-10 11:43:49 GMT+7",
+    "Result": "2/71",
+    "Detections": [
+      {
+        "Engine": "McAfee Scanner",
+        "Label": "Ti!D6436B1C3A57"
+      },
+      {
+        "Engine": "SecureAge",
+        "Label": "Malicious"
+      }
+    ],
+    "Microsoft": "Undetected",
+    "Zillya": "Undetected",
+    "BkavPro": "Undetected",
+    "URL": "https://www.virustotal.com/gui/file/d6436b1c3a57caae41bb20d3d78c8af147076c331a17b461c6c0665be65b6d62"
+  },
+  "ZIP": {
+    "SHA256": "87F7656BA3A30C4EE310F34B0F121755A25FA5F3B3DAE716610B0A51E6456DCE",
+    "AnalysisTime": "2026-10-10 11:43:05 GMT+7",
+    "Result": "0/66",
+    "SecureAge": "Unable to process file type",
+    "Zillya": "Failure",
+    "Caveat": "ZIP result does not clear the separately detected EXE.",
+    "URL": "https://www.virustotal.com/gui/file/87f7656ba3a30c4ee310f34b0f121755a25fa5f3b3dae716610b0a51e6456dce"
+  },
+  "EmptyInnoControl": {
+    "SHA256": "AFE788A9439AD514A991BEAC7E5566968680222EBBE7E59F6180C75125B281BC",
+    "AnalysisTime": "2026-10-10 11:43:29 GMT+7",
+    "Result": "0/71",
+    "ModLabPayloadIncluded": false,
+    "CustomCodeIncluded": false,
+    "URL": "https://www.virustotal.com/gui/file/afe788a9439ad514a991beac7e5566968680222ebbe7e59f6180c75125b281bc"
+  }
+}

@@ -4,6 +4,64 @@ Functional installation tests passed. Antivirus acceptance is a separate,
 unresolved release requirement. No vendor has provided its detection rule.
 These counts are observations at the time of review and can change.
 
+## Latest completed scans — alpha.7 portable candidate and controls
+
+All three browser-upload verifications completed on 2026-10-10. The exact
+artifacts are preserved; none is promoted as an approved public installer.
+
+| Artifact | Completed result | Analysis time (GMT+7) |
+| --- | --- | --- |
+| [alpha.7 ModLab.exe](https://www.virustotal.com/gui/file/d6436b1c3a57caae41bb20d3d78c8af147076c331a17b461c6c0665be65b6d62) | **2/71** — McAfee Scanner `Ti!D6436B1C3A57`, SecureAge `Malicious` | 11:43:49 |
+| [alpha.7 complete ZIP](https://www.virustotal.com/gui/file/87f7656ba3a30c4ee310f34b0f121755a25fa5f3b3dae716610b0a51e6456dce) | **0/66** — SecureAge unsupported; Zillya failure | 11:43:05 |
+| [Empty Inno engine control](https://www.virustotal.com/gui/file/afe788a9439ad514a991beac7e5566968680222ebbe7e59f6180c75125b281bc) | **0/71** — no ModLab payload or custom code | 11:43:29 |
+
+The alpha.7 application embeds no runtime archive, extracts no executable and
+starts no worker. It reuses the unchanged file transaction and Steam discovery
+sources. Microsoft, Zillya and Bkav Pro reported Undetected for this EXE at
+the recorded time. The complete ZIP was tested after extraction under
+PowerShell 7.6.5 and Windows PowerShell 5.1: installation, update, restoration,
+alpha.2 migration, partial-move rollback and integrity rejection passed. The
+new GUI was not visually exercised in this session. All eight runtime hashes
+are unchanged. [Build instructions](PORTABLE-BUILDING.md).
+
+A separate [native-files Inno prototype](https://www.virustotal.com/gui/file/00f808d85ea326af0423dbe99e35f79265e46bf1bb16f8b17300bbcfefc9cfb9)
+without a custom worker or script still reported **2/71** (SecureAge and Zillya)
+at 10:36:50. The empty Inno control and this prototype show that the Inno
+engine alone and a separate worker are not sufficient explanations for every
+observed detection. They do not reveal the vendors' rules or prove a false
+positive. Packaging changes alone have not eliminated all detections.
+
+## alpha.6 candidate — completed installer and worker scans
+
+alpha.6 is a local installer-only candidate built from the unchanged eight
+runtime files. It addresses the concrete packaging gaps identified in the
+2026-10-10 analysis ([AV-ANALYSIS-2026-10-10.md](AV-ANALYSIS-2026-10-10.md)):
+
+- custom Setup/worker icon (replaces Inno Setup's shared default icon);
+- complete version metadata on both binaries;
+- optional code-signing step in the build (worker signed before it is
+  embedded, Setup signed after compilation; inert without a certificate).
+
+- EXE SHA-256: `EEE41A5B418B0963AB865D81DC6ECC941B48E42004A443F96173D5E36E70B89E`
+  (9,983,985 bytes).
+- Worker SHA-256: `CD413994F9BC98E5AE7EF10F7AA08E15B5F0E6D698890DDAEE331E62EE1E63C0`.
+- Manifest unchanged: `A62272F64CC4BABF50AE5B5609719967B94BBA46A5D7EDE401F5D7AB42D29EF5`.
+
+`check_standard_worker.ps1` and `check_modlab_setup.ps1 -StandardSetup
+-PreviousSetupPath <alpha.2>` passed under PowerShell 7.6.5 and Windows
+PowerShell 5.1 (including alpha.2 ownership migration, rollback and
+Unicode/space/dollar fixture paths). Local Defender scans reported no threats
+(supporting evidence only). Completed VirusTotal reports show:
+
+- [EXE](https://www.virustotal.com/gui/file/eee41a5b418b0963ab865d81dc6ecc941b48e42004a443f96173d5e36e70b89e):
+  **2/71**, SecureAge and Zillya, 09:52:39 GMT+7.
+- [Worker](https://www.virustotal.com/gui/file/cd413994f9bc98e5ae7ef10f7aa08e15b5f0e6d698890ddaee331e62ee1e63c0):
+  **3/71**, Bkav Pro, McAfee Scanner and SecureAge, 09:55:31 GMT+7.
+
+Microsoft reported Undetected for both at those times. The candidate remains
+unapproved. Code signing identifies a publisher and protects file integrity;
+it does not guarantee warning-free downloads or zero antivirus detections.
+
 ## Latest component checks, 06:48–06:50 GMT+7
 
 The unchanged alpha.5 EXE was reanalysed on 2026-10-10 at 06:48:58.
