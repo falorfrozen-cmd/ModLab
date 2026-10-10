@@ -11,6 +11,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Test read-only Xbox layout preflight on PowerShell 7
+        shell: pwsh
+        run: ./tests/check_xbox_preflight.ps1
+      - name: Test read-only Xbox layout preflight on Windows PowerShell 5.1
+        shell: powershell
+        run: ./tests/check_xbox_preflight.ps1
       - name: Make transaction-only package fixture
         shell: pwsh
         run: |
